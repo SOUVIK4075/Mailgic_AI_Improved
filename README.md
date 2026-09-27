@@ -33,6 +33,8 @@ One server, one database, one AI provider. Details and the reasoning behind ever
 Prerequisites: Node 20+, Docker, a Gemini (free) or OpenAI API key.
 
 ```bash
+git clone https://github.com/SOUVIK4075/Mailgic_AI_Improved.git
+cd Mailgic_AI_Improved
 npm run setup                          # installs root, server and client dependencies
 docker compose up -d --wait mongo      # MongoDB with Vector Search (waits until it is ready)
 cp server/.env.example server/.env     # then set OPENAI_API_KEY (Gemini key works) and JWT_ACCESS_SECRET
