@@ -1,0 +1,32 @@
+# Local development database. Atlas Local = MongoDB + Atlas Search/Vector Search in one container,
+# so RAG works on your laptop exactly like it will on MongoDB Atlas.
+#   docker compose up -d --wait mongo -> just the database (use `npm run dev` for the app)
+#   docker compose --profile full up  -> database + the production build of the app
+services:
+  mongo:
+    image: mongodb/mongodb-atlas-local:8.0
+    # The image runs a one-node replica set that stores its own hostname in the data volume.
+    # A fixed hostname keeps it valid when the container is recreated (otherwise: "no primary").
+    hostname: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+
+  app:
+    profiles: ["full"]
+    build: .
+    ports:
+      - "4000:4000"
+    env_file: server/.env
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongo:27017/mailgic?directConnection=true
+      APP_URL: http://localhost:4000
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
+  mongo-config:
