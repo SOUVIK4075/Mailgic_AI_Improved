@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* Design tokens. Tailwind v4 turns every --color-* into utilities (bg-paper, text-ink, border-line...). */
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  --color-paper: #f5f2ea;   /* page background, like writing paper */
+  --color-sheet: #fffdf8;   /* cards and the letter itself */
+  --color-ink: #1f1d1a;     /* main text */
+  --color-muted: #6f695f;   /* secondary text */
+  --color-faint: #a39c8f;   /* hints, placeholders */
+  --color-line: #e2dccf;    /* borders and rules */
+  --color-accent: #1f5135;  /* fountain-pen green, the one accent colour */
+  --color-accent-dark: #163b27;
+  --color-accent-soft: #e4ede6;
+  --color-marker: #f7e39b;  /* highlighter for [placeholders] */
+  --color-danger: #9f3a2c;
+  --color-danger-soft: #f6e4df;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-size: 15px;
+  }
+
+  ::selection {
+    @apply bg-marker;
+  }
+
+  /* Tailwind v4 no longer gives buttons a pointer cursor by default. */
+  button:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+}
+
+/* A handful of shared building blocks, so pages stay readable. */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-line bg-sheet px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-muted disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .field {
+    @apply w-full rounded-md border border-line bg-sheet px-3 py-2.5 text-ink outline-none transition-colors placeholder:text-faint focus:border-accent focus:ring-2 focus:ring-accent/15;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-ink;
+  }
+
+  .hint {
+    @apply text-xs text-muted;
+  }
+
+  .link {
+    @apply text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent;
+  }
+
+  /* Small uppercase mono label used for metadata ("REPLY · 12 MAR"). */
+  .meta {
+    @apply font-mono text-[11px] uppercase tracking-wider text-muted;
+  }
+}
+
+/* The browser's own blue "clear" icon in search inputs doesn't fit the palette — tone it down. */
+input[type='search']::-webkit-search-cancel-button {
+  filter: grayscale(1) opacity(0.5);
+  cursor: pointer;
+}
