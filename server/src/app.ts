@@ -6,7 +6,7 @@ import express from 'express';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { pinoHttp } from 'pino-http';
-import { isProd } from './config/env.js';
+import { env, isProd } from './config/env.js';
 import { EMAIL_TYPES, LIMITS, TONES } from './config/constants.js';
 import { isDbUp } from './db.js';
 import { logger } from './lib/logger.js';
@@ -23,7 +23,9 @@ import { remindersRouter } from './modules/reminders/reminders.routes.js';
 export function createApp() {
   const app = express();
 
-  if (isProd) app.set('trust proxy', 1); // correct client IPs behind Render/Railway/Nginx (rate limiting needs this)
+  // Real client IPs behind proxies (Vercel → Render). Rate limiting is per IP, so this matters:
+  // with the wrong value every user would look like the same proxy IP and share one limit.
+  app.set('trust proxy', env.TRUST_PROXY_HOPS ?? (isProd ? 1 : 0));
 
   app.use(helmet());
   // Every request gets an id; it's in every log line and in error responses, so a user's

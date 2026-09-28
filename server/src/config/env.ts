@@ -6,6 +6,10 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(4000),
   APP_URL: z.url().default('http://localhost:5173'),
+  // How many proxies sit in front of the app (Vercel rewrite → Render load balancer = 2).
+  // Express needs this to read the real client IP from X-Forwarded-For; rate limits are per IP.
+  // Unset: 1 in production (just the host's load balancer), 0 locally.
+  TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).optional(),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
 
   MONGODB_URI: z.string().min(1),

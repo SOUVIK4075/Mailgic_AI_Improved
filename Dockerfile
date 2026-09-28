@@ -1,20 +1,20 @@
 # Multi-stage build: compile client and server, then ship only what's needed to run.
 
-FROM node:20-alpine AS client
+FROM node:22-alpine AS client
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm ci
 COPY client/ ./
 RUN npm run build
 
-FROM node:20-alpine AS server
+FROM node:22-alpine AS server
 WORKDIR /app/server
 COPY server/package*.json ./
 RUN npm ci
 COPY server/ ./
 RUN npm run build && npm prune --omit=dev
 
-FROM node:20-alpine
+FROM node:22-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=server /app/server/package.json server/

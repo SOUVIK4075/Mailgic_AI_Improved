@@ -30,7 +30,7 @@ One server, one database, one AI provider. Details and the reasoning behind ever
 
 ## Run locally
 
-Prerequisites: Node 20+, Docker, a Gemini (free) or OpenAI API key.
+Prerequisites: Node 22+, Docker, a Gemini (free) or OpenAI API key.
 
 ```bash
 git clone https://github.com/SOUVIK4075/Mailgic_AI_Improved.git
