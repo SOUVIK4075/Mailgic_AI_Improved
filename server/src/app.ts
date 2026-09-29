@@ -33,6 +33,8 @@ export function createApp() {
   app.use(
     pinoHttp({
       logger,
+      // The host pings /api/health every few seconds; logging each ping would bury the real requests.
+      autoLogging: { ignore: (req) => req.url === '/api/health' },
       genReqId: (req, res) => {
         const id = (req.headers['x-request-id'] as string) || crypto.randomUUID();
         res.setHeader('x-request-id', id);
